@@ -39,11 +39,13 @@ fire_event() {
 }
 
 echo "[INFO] stdin task runner ready (default model: ${DEFAULT_MODEL:-claude default}, max ${MAX_MINUTES} min)"
+fire_event claudecode_runner_ready "$(jq -n --arg m "${DEFAULT_MODEL:-default}" '{model: $m}')"
 
 while IFS= read -r line; do
     [ -z "$line" ] && continue
     if ! jq -e . > /dev/null 2>&1 <<< "$line"; then
         echo "[WARN] task runner: ignoring non-JSON stdin line"
+        fire_event claudecode_runner_ready "$(jq -n --arg l "${line:0:80}" '{ignored_line: $l}')"
         continue
     fi
     RUN_ID=$(jq -r '.run_id // "task"' <<< "$line")
