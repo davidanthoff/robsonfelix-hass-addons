@@ -62,6 +62,9 @@ RUN case "${BUILD_ARCH}" in \
 # SIGILL). Fix that at the hypervisor (Proxmox CPU type "host"), not here.
 # No version is hardcoded: take latest when it runs, otherwise the newest
 # release that passes a smoke test, so the add-on still builds on such hosts.
+COPY stdin-runner.sh /usr/local/bin/stdin-runner.sh
+RUN chmod +x /usr/local/bin/stdin-runner.sh
+
 COPY install-claude.sh /usr/local/bin/install-claude.sh
 RUN chmod +x /usr/local/bin/install-claude.sh && /usr/local/bin/install-claude.sh
 
@@ -293,6 +296,7 @@ CMD ["/bin/bash", "-c", "\
     SHELL_CMD='bash --login'; \
   fi && \
   if [ \"$REMOTE_CONTROL\" = \"true\" ]; then export CLAUDE_REMOTE_CONTROL_SESSION_NAME_PREFIX=\"$RC_SESSION_PREFIX\"; fi && \
+  { /usr/local/bin/stdin-runner.sh <&0 & } && \
   cd /homeassistant && \
   exec ttyd --port 7681 --writable --ping-interval 30 --max-clients 5 \
     -t fontSize=$FONT_SIZE \

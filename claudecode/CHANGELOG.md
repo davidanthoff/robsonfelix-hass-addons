@@ -1,3 +1,14 @@
+## 1.3.0
+
+- Headless runs triggered from automations: send a JSON task (prompt or
+  prompt_file, optional model/allowed_tools/run_id) via the built-in
+  `hassio.addon_stdin` service; the add-on runs `claude -p` with the
+  already-stored authentication, serializes runs, enforces
+  `task_max_runtime_minutes`, logs transcripts to the add-on config dir,
+  and fires `claudecode_run_started` / `claudecode_run_finished` events
+  for automations to react to. New options: `default_task_model`,
+  `default_task_allowed_tools`, `task_max_runtime_minutes`.
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
