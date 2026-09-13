@@ -126,6 +126,31 @@ service:
   (`task-logs/<run_id>-<timestamp>.log`).
 - Authentication reuses the login you completed in the web terminal.
 
+### Give it a friendlier name
+
+`hassio.addon_stdin` is generic plumbing. Wrap it once in a script with
+typed fields and every automation gets a readable, first-class action:
+
+```yaml
+script:
+  claude_agent:
+    alias: Claude agent
+    fields:
+      prompt: {selector: {text: {multiline: true}}}
+      run_id: {default: task, selector: {text: {}}}
+      model: {selector: {text: {}}}
+    sequence:
+      - action: hassio.addon_stdin
+        data:
+          addon: XXXXXXXX_claudecode
+          input:
+            run_id: "{{ run_id | default('task') }}"
+            prompt: "{{ prompt | default('') }}"
+            model: "{{ model | default('') }}"
+```
+
+Then: `action: script.claude_agent` with `prompt:` / `run_id:` data.
+
 ## Configuration Options
 
 | Option | Description | Default |
