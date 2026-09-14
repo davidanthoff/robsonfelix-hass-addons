@@ -1,3 +1,11 @@
+## 1.4.0
+
+- Task runner now reads stdin concurrently with a running task:
+  `{"abort": true}` hard-kills the active run (reported with
+  `aborted: true` on `claudecode_run_finished`), and a task arriving
+  while one is active is rejected with a `claudecode_run_rejected`
+  event instead of silently queueing.
+
 ## 1.3.0
 
 - Headless runs triggered from automations: send a JSON task (prompt or

@@ -125,6 +125,9 @@ service:
 - Transcripts are written to the add-on config directory
   (`task-logs/<run_id>-<timestamp>.log`).
 - Authentication reuses the login you completed in the web terminal.
+- Send `{"abort": true}` on the same channel to hard-kill the active
+  run (finish event carries `aborted: true`); a task sent while another
+  is running is rejected with a `claudecode_run_rejected` event.
 
 ### Give it a friendlier name
 
